@@ -23,8 +23,8 @@ def main():
 
     # 数据目录（建议与你现在的 data 结构对应）
     PDF_FOLDER = os.path.join(BASE_DIR, "data", "raw", "pdf_demo")          # demo PDF
-    TXT_OUTPUT_DIR = os.path.join(BASE_DIR, "data", "interim", "texts")     # OCR 结果
-    JSONL_OUTPUT_DIR = os.path.join(BASE_DIR, "data", "interim", "jsonl")   # LLM 标注结果
+    TXT_OUTPUT_DIR = os.path.join(BASE_DIR, "data", "interim", "extracted_texts_demo")     # OCR 结果
+    JSONL_OUTPUT_DIR = os.path.join(BASE_DIR, "data", "interim", "labeled_jsonl_demo")   # LLM 标注结果
     TEMP_PAGES_DIR = os.path.join(BASE_DIR, "data", "interim", "temp_pages")
 
     # Neo4j 连接从环境变量读取（不要硬编码密码）
@@ -136,3 +136,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
