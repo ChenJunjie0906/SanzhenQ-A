@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+py2neo
+pdf2image
+paddleocr
+python-dotenv
+openai
+tqdm
+pydantic
+python-multipart
