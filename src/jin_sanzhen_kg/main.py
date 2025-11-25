@@ -2,6 +2,7 @@ import os
 from extract_text import PDFBatchExtractor
 from batch_auto_label import BatchAutoLabeler
 from build_graph import AcuKGBuilder
+from merge_dedup_labels import LabelMerger
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
     JSONL_OUTPUT_DIR = "labeled_jsonl"  # 结构化标注结果输出目录
     NEO4J_URI = "bolt://localhost:7687"
     NEO4J_USER = "neo4j"
-    NEO4J_PASSWORD = "Your Password"
+    NEO4J_PASSWORD = "Jacky@0906"
 
     # 创建必要目录
     os.makedirs(PDF_FOLDER, exist_ok=True)
@@ -58,9 +59,18 @@ def main():
     #labeler.label_single_txt("extracted_texts/靳三针疗法流派临床经验全图解.txt", prompt_type="disease")
 
     # ===============================
+    # 3. 合并标注结果阶段
+    # ===============================
+    print("\n🔄 第三阶段：合并标注结果")
+    merger = LabelMerger(input_dir=JSONL_OUTPUT_DIR, output_file="all_marked_merged.jsonl")
+    if not merger.merge():
+        print("⚠️ 合并过程出现错误，请检查标注文件")
+        return
+
+    # ===============================
     # 4. 知识图谱构建阶段
     # ===============================
-    print("\n🧠 第三阶段：知识图谱构建")
+    print("\n🧠 第四阶段：知识图谱构建")
 
     # 初始化知识图谱构建器
     builder = AcuKGBuilder(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD)
@@ -90,11 +100,10 @@ def main():
         print(f"⚠️ 警告：未找到治疗方案文件 {plans_file}")
 
     print("\n🎉 所有处理完成！")
-    print(f"📝 提取文本已保存至: {TXT_OUTPUT_DIR}")
-    print(f"📊 结构化数据已保存至: {JSONL_OUTPUT_DIR}")
+    #print(f"📝 提取文本已保存至: {TXT_OUTPUT_DIR}")
+    #print(f"📊 结构化数据已保存至: {JSONL_OUTPUT_DIR}")
     print(f"🌐 知识图谱已构建完成")
 
 
 if __name__ == "__main__":
     main()
-
