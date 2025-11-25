@@ -1,0 +1,112 @@
+# ======================
+# Python 基础忽略
+# ======================
+
+# 编译产生的字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C 扩展
+*.so
+
+# 分发 / 打包
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 单元测试 / 覆盖率
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# ======================
+# 虚拟环境
+# ======================
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ======================
+# 编辑器 / IDE
+# ======================
+
+# VS Code
+.vscode/
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+
+# VS / Rider 等
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ======================
+# 操作系统产生的文件
+# ======================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ======================
+# 项目相关
+# ======================
+
+# 运行过程中生成的中间数据、日志等
+data/interim/
+logs/
+*.log
+
+# 如果你后续在 data/raw 里放大规模私有数据，可视情况忽略：
+# data/raw/
+
+# 环境变量 / 密钥配置文件（如果有）
+.env
+.env.*
+*.env
+
+# 其他你不想提交到 Git 的临时文件
+tmp/
+temp/
