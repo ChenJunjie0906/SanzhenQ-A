@@ -1,4 +1,4 @@
-# Jin Sanzhen Acupuncture Knowledge Graph And Intelligent QA System
+# Jin Sanzhen Acupuncture Knowledge Graph Construction and QA System Code Framework
 
 > This README is intended for direct inclusion in your repository. The following is the **English version** corresponding to your current Chinese text, with an additional description of the **QA module (`QA_system.py`)**.
 
@@ -37,7 +37,7 @@ repo_root/
 ```
 src and data are sibling directories, so in main_demo.py and QA_system.py the repository root is typically located by going three levels up.
 
-3. Environment Setup
+## 3. Environment Setup
 Clone the repository:
 ```
 bash
@@ -55,10 +55,10 @@ Install dependencies:
 bash
 pip install -r requirements.txt
 ```
-4. Prepare Demo Data
+## 4. Prepare Demo Data
 To avoid copyright issues, only a small amount of example data is provided in the repository for demo purposes.
 
-4.1 Example PDF (OCR Input)
+### 4.1 Example PDF (OCR Input)
 Place your own sample PDF (open-access article or self-made demo) in:
 ```
 text
@@ -79,7 +79,7 @@ pdf_path = os.path.join(
 ```
 
 
-4.2 Manually / Pre-processed Structured Samples
+### 4.2 Manually / Pre-processed Structured Samples
 Under data/raw/processed/, prepare the following JSONL files (these are already the full datasets in this demo):
 
 GBT+12346-2021_demo.jsonl
@@ -87,7 +87,7 @@ GBT+12346-2021_demo.jsonl
 all_marked_merged.jsonl
 In the full experiment, all_marked_merged.jsonl is generated via LLM automatic annotation + LabelMerger for merging and deduplication. In the current demo, only the example call of LabelMerger is kept; graph construction directly uses the above manual / pre-processed files.
 
-5. Neo4j Configuration
+## 5. Neo4j Configuration
 The project uses Neo4j as the knowledge graph database. Install and start Neo4j (either Desktop or Docker), and create a database instance (the default neo4j database is sufficient). Before running the demo or QA system, set the following environment variables in your terminal (do not hard-code passwords in code).
 
 Linux / macOS (Bash) example:
@@ -112,7 +112,7 @@ NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
 ```
 
-6. Run the Demo Pipeline
+## 6. Run the Demo Pipeline
 From the repository root, execute:
 ```
 bash
@@ -120,14 +120,14 @@ python -m jin_sanzhen_kg.main_demo
 ```
 The demo pipeline includes the following steps.
 
-6.1 PDF Text Extraction (OCR)
+### 6.1 PDF Text Extraction (OCR)
 Using PDFBatchExtractor, the script reads:
 * data/raw/pdf_demo/靳三针结合体针治疗外展神经麻痹的临床疗效观察_蒲宁.pdf
 
 and performs text extraction / OCR, writing results to:
 * data/interim/extracted_texts_demo/
 
-6.2 LLM-Based Automatic Structured Annotation
+### 6.2 LLM-Based Automatic Structured Annotation
 Using BatchAutoLabeler, the demo performs automatic structured annotation on the extracted texts. In the demo, it uniformly calls:
 ```
 python
@@ -136,7 +136,7 @@ labeler.batch_process(prompt_type="disease")
 to extract information such as disease–treatment relations. Annotation results are written to:
 data/interim/labeled_jsonl_demo/
 
-6.3 Annotation Merging (Logical Demonstration)
+### 6.3 Annotation Merging (Logical Demonstration)
 In the full pipeline, LabelMerger is used to merge and deduplicate annotation results from multiple files and generate all_marked_merged.jsonl. In main_demo.py, only an example of the interface call is kept:
 ```
 python
@@ -148,14 +148,14 @@ In the current demo, graph construction directly consumes:
 text
 data/raw/processed/all_marked_merged.jsonl
 ```
-6.4 Knowledge Graph Construction (Neo4j)
+### 6.4 Knowledge Graph Construction (Neo4j)
 Using AcuKGBuilder, the script connects to Neo4j, calls builder.clear_graph() to clear the existing graph so the demo can be rerun, and then imports in sequence:
 * Standard acupoint library: GBT+12346-2021_demo.jsonl
 * Jin Sanzhen combinations: 靳三针穴组使用.jsonl
 * Treatment plans: all_marked_merged.jsonl
 This builds a small-scale, visualizable demo knowledge graph in Neo4j.
 
-7. Exploring the Graph in Neo4j
+## 7. Exploring the Graph in Neo4j
 Open Neo4j Browser (usually at http://localhost:7474), connect to the target database, and try the following sample queries (adjust label / relationship names to your actual implementation):
 ```
 cypher
@@ -175,7 +175,7 @@ MATCH (d:Disease)-[t:TREATED_BY]->(plan:TreatmentPlan)
 RETURN d, t, plan, c
 LIMIT 50;
 ```
-8. Knowledge-Graph-Based QA System (QA_system.py)
+## 8. Knowledge-Graph-Based QA System (QA_system.py)
 In addition to graph construction, the project provides a QA module under:
 ```
 text
@@ -190,10 +190,16 @@ python -m jin_sanzhen_kg_qa.QA_system
 ```
 A common workflow inside QA_system.py is: read Neo4j configuration from environment variables (NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD); initialize a Neo4j driver / session; enter a loop to accept natural language questions (for example, “What Jin Sanzhen combination is used to treat facial paralysis?” or “Which acupoints are included in combination X?”); convert the question into one or more Cypher queries; execute them; and format and return the answer.
 
-9. Relation to the Full Experiment
+## 9. Relation to the Full Experiment
 main_demo.py and QA_system.py are designed to showcase the overall structure of the pipeline and how different modules cooperate. They provide runnable, reproducible minimal examples: main_demo.py for graph construction, and QA_system.py for knowledge-graph-based intelligent QA. In the full experiment, you can: (1) replace pdf_demo/ with a large-scale PDF collection of clinical literature; (2) use BatchAutoLabeler plus LabelMerger to automatically generate a full all_marked_merged.jsonl; (3) replace the demo JSONL files with complete datasets and build a large-scale Jin Sanzhen acupuncture knowledge graph; and (4) extend QA_system.py with more question templates, semantic parsing, or LLM-based query generation to support richer and more robust QA capabilities.
 
-10. Citation and Acknowledgements
+## 10. Citation and Acknowledgements
 If this project is helpful for your research or system development, please consider citing this repository as:
 
 Jin Sanzhen Acupuncture Knowledge Graph Construction and QA System Code Framework
+
+## License
+```
+This project is licensed under the MIT License.  
+For more details, please refer to the `LICENSE` file in the root directory of this repository.
+```
