@@ -2,7 +2,7 @@ import os
 from .extract_text import PDFBatchExtractor
 from .batch_auto_label import BatchAutoLabeler
 from .build_graph import AcuKGBuilder
-from .merge_dedup_labels import merge_jsonl  
+from .merge_dedup_labels import LabelMerger  
 
 
 def main():
@@ -57,13 +57,13 @@ def main():
     )
 
     # demo：约定只处理一个示例 PDF
-    pdf_path = os.path.join(PDF_FOLDER, "example_jin_sanzhen.pdf")
+    pdf_path = os.path.join(PDF_FOLDER, ""靳三针"结合体针治疗外展神经麻痹的临床疗效观察_蒲宁.pdf")
     if os.path.exists(pdf_path):
         extractor.process_single_pdf(pdf_path)
     else:
-        print(f"⚠️ 未找到 demo PDF 文件：{pdf_path}")
-        print("   可以将任意 1 个示例 PDF 放在 data/raw/pdf_demo/ 下，并命名为 example_jin_sanzhen.pdf")
-        print("   本次将跳过 OCR 阶段（如果你已经有手工准备的 txt 也没关系）。")
+        print(f"未找到 demo PDF 文件：{pdf_path}")
+        print(" 可以将任意 1 个示例 PDF 放在 data/raw/pdf_demo/ 下")
+        print(" 本次将跳过 OCR 阶段（如果你已经有手工准备的 txt 也没关系）。")
 
     # ===============================
     # 2. 自动标注阶段（demo）
@@ -84,14 +84,8 @@ def main():
     # ===============================
     print("\n🔄 第三阶段：合并 & 过滤标注结果（demo）")
 
-    # 这里直接调用 merge_jsonl()，其内部 IN_DIR/OUT_FILE 可以暂时沿用你原来的设置
-    merge_jsonl()
-
-    merged_plans_file = os.path.join(BASE_DIR, "all_marked_merged.jsonl")
-    if not os.path.exists(merged_plans_file):
-        print(f"⚠️ 未在 {BASE_DIR} 找到合并后的 all_marked_merged.jsonl，"
-              "请检查 merge_dedup_labels.py 中 IN_DIR/OUT_FILE 设置。")
-        return
+    #下面的合成步骤只作为展示代码逻辑，因为由于版权问题，这里只展示了1例数据
+    # merger = LabelMerger(input_dir=JSONL_OUTPUT_DIR, output_file="all_marked_merged.jsonl")
 
     # ===============================
     # 4. 知识图谱构建阶段（demo）
@@ -103,11 +97,11 @@ def main():
     # demo 建议每次清空图谱，保持可重复构建
     builder.clear_graph()
 
-    # 标准穴位 & 组合 & 方案，使用 demo 版 jsonl
+    # 下面就直接使用手工准备好的所有样本数据
     processed_dir = os.path.join(BASE_DIR, "data", "raw", "processed")
     gbt_file = os.path.join(processed_dir, "GBT+12346-2021_demo.jsonl")
-    combo_file = os.path.join(processed_dir, "jinsanzhen_usage_demo.jsonl")
-    plans_file = merged_plans_file  # 上一步 merge 的输出
+    combo_file = os.path.join(processed_dir, "靳三针穴组使用.jsonl")
+    plans_file = os.path.join(processed_dir, "all_marked_merged.jsonl")  
 
     # 导入标准穴位库（demo 小样本）
     if os.path.exists(gbt_file):
@@ -128,12 +122,8 @@ def main():
         print(f"⚠️ 警告：未找到治疗方案文件 {plans_file}")
 
     print("\n🎉 demo 流程已完成")
-    print("   - OCR 文本目录:", TXT_OUTPUT_DIR)
-    print("   - LLM 标注结果目录:", JSONL_OUTPUT_DIR)
-    print("   - 合并后方案文件:", merged_plans_file)
-    print("   - Neo4j 中已构建一个小规模示例知识图谱（可在浏览器中连接查看）")
-
 
 if __name__ == "__main__":
     main()
+
 
