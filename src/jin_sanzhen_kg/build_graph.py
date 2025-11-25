@@ -1,5 +1,3 @@
-# build_full_acu_kg.py
-
 import json
 import re
 from pathlib import Path
@@ -501,7 +499,7 @@ if __name__ == "__main__":
     # 1. 修改为你的 Neo4j 配置
     URI = "bolt://localhost:7687"
     USER = "neo4j"
-    PASSWORD = "Jacky@0906"
+    PASSWORD = "Your PASSWORD"
 
     # 2. 修改为你三个文件的实际路径
     GBT_FILE = "GBT+12346-2021.jsonl"
@@ -514,4 +512,5 @@ if __name__ == "__main__":
     # 顺序：先标准穴位 → 再组合 → 再方案
     builder.import_gbt_points(GBT_FILE)
     builder.import_jinsanzhen_combos_from_usage(COMBO_FILE)
+
     builder.import_plans(PLANS_FILE)
