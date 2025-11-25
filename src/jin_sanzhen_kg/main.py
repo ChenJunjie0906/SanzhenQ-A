@@ -18,7 +18,7 @@ def main():
     JSONL_OUTPUT_DIR = "labeled_jsonl"  # 结构化标注结果输出目录
     NEO4J_URI = "bolt://localhost:7687"
     NEO4J_USER = "neo4j"
-    NEO4J_PASSWORD = "Jacky@0906"
+    NEO4J_PASSWORD = "Your Password"
 
     # 创建必要目录
     os.makedirs(PDF_FOLDER, exist_ok=True)
@@ -90,10 +90,11 @@ def main():
         print(f"⚠️ 警告：未找到治疗方案文件 {plans_file}")
 
     print("\n🎉 所有处理完成！")
-    #print(f"📝 提取文本已保存至: {TXT_OUTPUT_DIR}")
-    #print(f"📊 结构化数据已保存至: {JSONL_OUTPUT_DIR}")
+    print(f"📝 提取文本已保存至: {TXT_OUTPUT_DIR}")
+    print(f"📊 结构化数据已保存至: {JSONL_OUTPUT_DIR}")
     print(f"🌐 知识图谱已构建完成")
 
 
 if __name__ == "__main__":
     main()
+
