@@ -57,9 +57,9 @@ class PDFBatchExtractor:
                 if txt:
                     text_lines.append(txt)
             page_text = "\n".join(text_lines)
-            return f"\n\n📘【第 {page_num} 页】\n{page_text}\n"
+            return f"\n\n【第 {page_num} 页】\n{page_text}\n"
         except Exception as e:
-            return f"\n\n📘【第 {page_num} 页】\n[识别出错]: {e}\n"
+            return f"\n\n【第 {page_num} 页】\n[识别出错]: {e}\n"
 
     def process_single_pdf(self, pdf_path):
         """
@@ -79,7 +79,7 @@ class PDFBatchExtractor:
         # PDF转图片
         print(f"📄 正在处理: {pdf_path}")
         images = convert_from_path(pdf_path, dpi=self.dpi, fmt="png", output_folder=temp_dir)
-        print(f"✅ 已生成 {len(images)} 页图片到 {temp_dir}")
+        print(f" 已生成 {len(images)} 页图片到 {temp_dir}")
 
         # 获取图片文件列表
         image_files = sorted([
@@ -88,7 +88,7 @@ class PDFBatchExtractor:
         ])
 
         # OCR识别
-        print("🤖 开始OCR识别...")
+        print("开始OCR识别...")
         results = []
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             tasks = {}
@@ -101,11 +101,11 @@ class PDFBatchExtractor:
 
         # 保存文本结果
         output_txt = os.path.join(self.txt_output_dir, f"{pdf_name}.txt")
-        print("💾 正在合并文字输出...")
+        print("正在合并文字输出...")
         with open(output_txt, "w", encoding="utf-8") as f:
             f.write("\n".join(results))
 
-        print(f"✅ OCR完成，结果已保存到: {output_txt}")
+        print(f"OCR完成，结果已保存到: {output_txt}")
 
     def process_all_pdfs(self):
         """
@@ -115,7 +115,7 @@ class PDFBatchExtractor:
         pdf_files = glob.glob(os.path.join(self.pdf_folder, "*.pdf"))
 
         if not pdf_files:
-            print("❌ 未找到PDF文件")
+            print("未找到PDF文件")
             return
 
         # 处理每个PDF文件
@@ -123,7 +123,7 @@ class PDFBatchExtractor:
             try:
                 self.process_single_pdf(pdf_file)
             except Exception as e:
-                print(f"❌ 处理 {pdf_file} 时出错: {e}")
+                print(f"处理 {pdf_file} 时出错: {e}")
 
 
 # 使用示例
@@ -131,4 +131,5 @@ if __name__ == "__main__":
     extractor = PDFBatchExtractor()
     #extractor.process_all_pdfs()
     #若要处理单个PDF文件，打开下面的代码并修改文件路径
+
     extractor.process_single_pdf("GBT+12346-2021.pdf")
