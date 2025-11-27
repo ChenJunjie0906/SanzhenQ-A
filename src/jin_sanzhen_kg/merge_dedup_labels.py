@@ -44,7 +44,7 @@ class LabelMerger:
         """
         jsonl_files = sorted(glob.glob(os.path.join(self.input_dir, "*.jsonl")))
         if not jsonl_files:
-            print(f"❌ 未在 {self.input_dir} 中找到 jsonl 文件，请先运行 batch_auto_label.py")
+            print(f"未在 {self.input_dir} 中找到 jsonl 文件，请先运行 batch_auto_label.py")
             return False
 
         valid_items = []
@@ -52,7 +52,7 @@ class LabelMerger:
         valid_count = 0
 
         for path in jsonl_files:
-            print(f"📂 处理文件：{path}")
+            print(f"处理文件：{path}")
             with open(path, "r", encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
@@ -61,7 +61,7 @@ class LabelMerger:
                     try:
                         item = json.loads(line)
                     except json.JSONDecodeError:
-                        print(f"⚠️ 跳过非法 JSON 行：{line[:80]}...")
+                        print(f"跳过非法 JSON 行：{line[:80]}...")
                         continue
 
                     total_count += 1
@@ -81,10 +81,10 @@ class LabelMerger:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
         print("========================================")
-        print(f"🔢 输入总记录数：{total_count}")
-        print(f"✅ 有效记录数：{valid_count}")
-        print(f"🗑️ 过滤掉记录数：{total_count - valid_count}")
-        print(f"💾 已保存合并结果：{self.output_file}")
+        print(f"输入总记录数：{total_count}")
+        print(f"有效记录数：{valid_count}")
+        print(f"过滤掉记录数：{total_count - valid_count}")
+        print(f"已保存合并结果：{self.output_file}")
         print("========================================")
 
         return True
@@ -93,3 +93,4 @@ class LabelMerger:
 if __name__ == "__main__":
     merger = LabelMerger()
     merger.merge()
+
